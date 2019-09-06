@@ -257,6 +257,37 @@ def in_cell_mid_table(cellLoLa, orgIdNamePoint, orgLevel, dayId, cityId):
                 Oracle_Exec(sql_insert_b_cell_mid)
                 break
 
+# 判断小区的结果并录入中间表
+def in_cell_mid_table_grid_id(cellLoLa, orgIdNamePoint_5, orgIdNamePoint_4, orgLevel_5, orgLevel_4,dayId, cityId):
+    """
+    :param cellLoLa: 小区的坐标信息
+    :param orgIdNamePoint: 网格的坐标范围信息
+    :param orgLevel: 网格等级
+    :return: 无返回值
+    """
+    for cellId, cellLo, cellLa in cellLoLa:  # 获取基站的经纬度
+        flag = 0
+        for ord_id, org_name, org_point in orgIdNamePoint_5:  # 获取网格的相关内容 (id、name、point list)
+            judge_result = is_pt_in_poly(cellLo, cellLa, org_point)
+            if judge_result:
+                sql_insert_b_cell_mid = "insert into b_cell_mid (day_id,org_name,grid_id,city_id,org_level,cell_id) " \
+                                        "values ('%s','%s','%s','%s','%s','%s')" % (
+                                        str(dayId), org_name, ord_id, str(cityId), str(orgLevel_5), cellId)
+                Oracle_Exec(sql_insert_b_cell_mid)
+                flag = 1
+                break
+        if flag == 0:
+            for ord_id, org_name, org_point in orgIdNamePoint_4:  # 获取网格的相关内容 (id、name、point list)
+                judge_result = is_pt_in_poly(cellLo, cellLa, org_point)
+                if judge_result:
+                    sql_insert_b_cell_mid = "insert into b_cell_mid (day_id,org_name,grid_id,city_id,org_level,cell_id) " \
+                                            "values ('%s','%s','%s','%s','%s','%s')" % (
+                                                str(dayId), org_name, ord_id, str(cityId), str(orgLevel_4), cellId)
+                    Oracle_Exec(sql_insert_b_cell_mid)
+                    break
+
+
+
 
 # 对比两个cell_id的region_id是否相同
 def judge_cell_id_region(cellId):

@@ -4,13 +4,16 @@ import getlola
 import threading
 
 
-def exec_cell(cityId, cityLevel, dayId):
+def exec_cell(cityId, cityLevel_5, cityLevel_4, dayId):
     threadl = []
     # 获取基站的名称和经纬度
     cell_lo_la = getlola.get_cell_lo_la(cityId, dayId)
-    # 获取指定区域网格的id、name、point
-    orgid_orgname_point = getlola.get_point_2(cityId, cityLevel)
-    orgid_orgname_point = getlola.expand_orgidnamepoint(orgid_orgname_point)
+    # 获取指定区域网格的id、name、point 等级5
+    orgid_orgname_point_5 = getlola.get_point_2(cityId, cityLevel_5)
+    orgid_orgname_point_5 = getlola.expand_orgidnamepoint(orgid_orgname_point_5)
+    # 获取指定区域网格的id、name、point 等级4
+    orgid_orgname_point_4 = getlola.get_point_2(cityId, cityLevel_4)
+    orgid_orgname_point_4 = getlola.expand_orgidnamepoint(orgid_orgname_point_4)
 
     flag = int(len(cell_lo_la) / 8)
     cellList1 = [x for x in cell_lo_la[:flag]]
@@ -23,25 +26,34 @@ def exec_cell(cityId, cityLevel, dayId):
     cellList8 = [x for x in cell_lo_la[flag * 7:]]
 
     if flag > 0:
-        threadl.append(threading.Thread(target=getlola.in_cell_mid_table,
-                                        args=(cellList1, orgid_orgname_point, cityLevel, dayId, cityId,)))
-        threadl.append(threading.Thread(target=getlola.in_cell_mid_table,
-                                        args=(cellList2, orgid_orgname_point, cityLevel, dayId, cityId,)))
-        threadl.append(threading.Thread(target=getlola.in_cell_mid_table,
-                                        args=(cellList3, orgid_orgname_point, cityLevel, dayId, cityId,)))
-        threadl.append(threading.Thread(target=getlola.in_cell_mid_table,
-                                        args=(cellList4, orgid_orgname_point, cityLevel, dayId, cityId,)))
-        threadl.append(threading.Thread(target=getlola.in_cell_mid_table,
-                                        args=(cellList5, orgid_orgname_point, cityLevel, dayId, cityId,)))
-        threadl.append(threading.Thread(target=getlola.in_cell_mid_table,
-                                        args=(cellList6, orgid_orgname_point, cityLevel, dayId, cityId,)))
-        threadl.append(threading.Thread(target=getlola.in_cell_mid_table,
-                                        args=(cellList7, orgid_orgname_point, cityLevel, dayId, cityId,)))
-        threadl.append(threading.Thread(target=getlola.in_cell_mid_table,
-                                        args=(cellList8, orgid_orgname_point, cityLevel, dayId, cityId,)))
+        threadl.append(threading.Thread(target=getlola.in_cell_mid_table_grid_id,
+                                        args=(cellList1, orgid_orgname_point_5, orgid_orgname_point_4, cityLevel_5,
+                                              cityLevel_4, dayId, cityId,)))
+        threadl.append(threading.Thread(target=getlola.in_cell_mid_table_grid_id,
+                                        args=(cellList2, orgid_orgname_point_5, orgid_orgname_point_4, cityLevel_5,
+                                              cityLevel_4, dayId, cityId,)))
+        threadl.append(threading.Thread(target=getlola.in_cell_mid_table_grid_id,
+                                        args=(cellList3, orgid_orgname_point_5, orgid_orgname_point_4, cityLevel_5,
+                                              cityLevel_4, dayId, cityId,)))
+        threadl.append(threading.Thread(target=getlola.in_cell_mid_table_grid_id,
+                                        args=(cellList4, orgid_orgname_point_5, orgid_orgname_point_4, cityLevel_5,
+                                              cityLevel_4, dayId, cityId,)))
+        threadl.append(threading.Thread(target=getlola.in_cell_mid_table_grid_id,
+                                        args=(cellList5, orgid_orgname_point_5, orgid_orgname_point_4, cityLevel_5,
+                                              cityLevel_4, dayId, cityId,)))
+        threadl.append(threading.Thread(target=getlola.in_cell_mid_table_grid_id,
+                                        args=(cellList6, orgid_orgname_point_5, orgid_orgname_point_4, cityLevel_5,
+                                              cityLevel_4, dayId, cityId,)))
+        threadl.append(threading.Thread(target=getlola.in_cell_mid_table_grid_id,
+                                        args=(cellList7, orgid_orgname_point_5, orgid_orgname_point_4, cityLevel_5,
+                                              cityLevel_4, dayId, cityId,)))
+        threadl.append(threading.Thread(target=getlola.in_cell_mid_table_grid_id,
+                                        args=(cellList8, orgid_orgname_point_5, orgid_orgname_point_4, cityLevel_5,
+                                              cityLevel_4, dayId, cityId,)))
     else:
-        threadl.append(threading.Thread(target=getlola.in_cell_mid_table,
-                                        args=(cellList8, orgid_orgname_point, cityLevel, dayId, cityId,)))
+        threadl.append(threading.Thread(target=getlola.in_cell_mid_table_grid_id,
+                                        args=(cellList8, orgid_orgname_point_5, orgid_orgname_point_4, cityLevel_5,
+                                              cityLevel_4, dayId, cityId,)))
 
     for i in threadl:
         i.start()
@@ -51,7 +63,8 @@ def exec_cell(cityId, cityLevel, dayId):
 
 if __name__ == '__main__':
 
-    cityLevel = '3'
+    cityLevel_5 = '5'
+    cityLevel_4 = '4'
     dayId = '20190828'
     threadl = []
     # sqlTruncateMid = "truncate table B_CELL_MID"
@@ -71,12 +84,12 @@ if __name__ == '__main__':
 
     for cityId in listForCityId:
         try:
-            print(cityId,"执行开始：",cityLevel,datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))
-            exec_cell(cityId,cityLevel,dayId)
+            print(cityId, "执行开始：", cityLevel_5, datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))
+            exec_cell(cityId, cityLevel_5, cityLevel_4, dayId)
             print(cityId, "==========执行结束：", datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))
         except:
-            print(cityId,"执行失败 fail")
-            print(cityId,"==========执行结束：",datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))
+            print(cityId, "执行失败 fail")
+            print(cityId, "==========执行结束：", datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))
             continue
 
     endTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
