@@ -10,9 +10,9 @@ print('====beging...')
 startTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
 print('===========================',startTime,'============================')
 
-DB_UserName = "js_gis"
-DB_UserPwd = "I6ftcQbeCFWyHK7"
-DB_ConnectStr = "10.32.241.203/xemkt1"
+DB_UserName = ""
+DB_UserPwd = ""
+DB_ConnectStr = ""
 
 
 def Oracle_Query(SqlStr, debug=0):
